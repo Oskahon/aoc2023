@@ -3,71 +3,72 @@ const fs = require('fs');
 const file = 'data.txt';
 const lines = fs.readFileSync(file, 'utf-8').split('\n');
 
-const filteredNumbers = lines.map(line => line.split('').filter(char => !isNaN(char)));
+function part1(data) {
+    const filteredNumbers = lines.map(line => line.split('').filter(char => !isNaN(char)));
 
-let sum = 0;
+    let sum = 0;
 
-for (const line of filteredNumbers) {
-    const first = line[0];
-    const last = line[line.length - 1];
-    const calibrationValue = first + last;
+    for (const line of filteredNumbers) {
+        const first = line[0];
+        const last = line[line.length - 1];
 
-    sum += parseInt(calibrationValue);
+        sum += parseInt(first + last);
+    }
+
+    return sum;
 }
 
-console.log(`Part1: ${sum}`);
+function part2(data) {
+    const spelledDigits = new Map([
+        ['one', '1'],
+        ['two', '2'],
+        ['three', '3'],
+        ['four', '4'],
+        ['five', '5'],
+        ['six', '6'],
+        ['seven', '7'],
+        ['eight', '8'],
+        ['nine', '9'],
+        ['1', '1'],
+        ['2', '2'],
+        ['3', '3'],
+        ['4', '4'],
+        ['5', '5'],
+        ['6', '6'],
+        ['7', '7'],
+        ['8', '8'],
+        ['9', '9'],
+    ]);
 
-const spelledDigits = new Map([
-    ['one', '1'],
-    ['two', '2'],
-    ['three', '3'],
-    ['four', '4'],
-    ['five', '5'],
-    ['six', '6'],
-    ['seven', '7'],
-    ['eight', '8'],
-    ['nine', '9'],
-    ['1', '1'],
-    ['2', '2'],
-    ['3', '3'],
-    ['4', '4'],
-    ['5', '5'],
-    ['6', '6'],
-    ['7', '7'],
-    ['8', '8'],
-    ['9', '9'],
-]);
+    let sum = 0;
 
-const firstAndLast = lines.map(line => {
-    let first = { position: -1, value: '' };
-    let last = { position: -1, value: '' };
+    lines.map(line => {
+        let first = { position: Infinity, value: '' };
+        let last = { position: -1, value: '' };
 
-    for (const [key, value] of spelledDigits) {
-        let i = -1;
+        for (const [key, value] of spelledDigits) {
+            const firstIndex = line.indexOf(key);
+            const lastIndex = line.lastIndexOf(key);
 
-        while ((i = line.indexOf(key, i + 1)) != -1) {
-            if (first.position === -1) {
-                first.position = i;
-                first.value = value;
-                last.position = i;
-                last.value = value;
-            } else {
-                if (i < first.position) {
-                    first.position = i;
+            if (firstIndex != -1) {
+                if (firstIndex < first.position) {
+                    first.position = firstIndex;
                     first.value = value;
                 }
-                if (i > last.position) {
-                    last.position = i;
+                if (lastIndex > last.position) {
+                    last.position = lastIndex;
                     last.value = value;
                 }
             }
         }
-    }
 
-    return first.value + last.value;
-});
+        sum += parseInt(first.value + last.value);
+    });
 
-let part2Sum = 0;
-firstAndLast.forEach(str => part2Sum += parseInt(str));
+    return sum;
+}
 
-console.log(`Part2: ${part2Sum}`);
+
+console.log(`Part1: ${part1(lines)}`);
+
+console.log(`Part2: ${part2(lines)}`);
