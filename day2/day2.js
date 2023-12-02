@@ -5,15 +5,17 @@ const lines = fs.readFileSync(file, 'utf-8').split('\n');
 
 let games = new Map();
 
-const redMax = 12;
-const greenMax = 13;
-const blueMax = 14;
+const maxValues = {
+    red: 12,
+    green: 13,
+    blue: 14,
+};
 
 lines.forEach(line => {
     const [gameNumber, gameData] = line.split(': ');
 
-    const id = parseInt(gameNumber.split(' ')[1]);
-    const highestCubes = new Map([['red', 0], ['blue', 0], ['green', 0]]);
+    const id = parseInt(gameNumber.match(/\d+/));
+    const highestCubes = { red: 0, blue: 0, green: 0 };
 
     const picks = gameData.split('; ');
 
@@ -24,8 +26,8 @@ lines.forEach(line => {
             let [amount, cubeColor] = color.split(' ');
             amount = parseInt(amount);
 
-            if (amount > highestCubes.get(cubeColor)) {
-                highestCubes.set(cubeColor, amount);
+            if (amount > highestCubes[cubeColor]) {
+                highestCubes[cubeColor] = amount;
             }
         });
     });
@@ -37,11 +39,11 @@ let sumOfIds = 0;
 let sumOfPowers = 0;
 
 for (const [id, highestCubes] of games.entries()) {
-    if (highestCubes.get('red') <= redMax && highestCubes.get('green') <= greenMax && highestCubes.get('blue') <= blueMax) {
+    if (highestCubes.red <= maxValues.red && highestCubes.green <= maxValues.green && highestCubes.blue <= maxValues.blue) {
         sumOfIds += id;
     }
 
-    sumOfPowers += (highestCubes.get('red') * highestCubes.get('green') * highestCubes.get('blue'));
+    sumOfPowers += Object.values(highestCubes).reduce((power, value) => power *= value, 1);
 }
 
 console.log(`Part1: ${sumOfIds}`);
