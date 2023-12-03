@@ -3,8 +3,12 @@ const fs = require('fs');
 const file = 'data.txt';
 const lines = fs.readFileSync(file, 'utf-8').split('\n');
 
+function filterNumbers(char) {
+    return !isNaN(char);
+}
+
 function part1(data) {
-    const filteredNumbers = lines.map(line => line.split('').filter(char => !isNaN(char)));
+    const filteredNumbers = lines.map(line => line.split('').filter(filterNumbers));
 
     let sum = 0;
 
@@ -12,7 +16,7 @@ function part1(data) {
         const first = line[0];
         const last = line[line.length - 1];
 
-        sum += parseInt(first + last);
+        sum += Number(first + last);
     }
 
     return sum;

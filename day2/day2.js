@@ -14,7 +14,7 @@ const maxValues = {
 lines.forEach(line => {
     const [gameNumber, gameData] = line.split(': ');
 
-    const id = parseInt(gameNumber.match(/\d+/));
+    const id = Number(gameNumber.match(/\d+/));
     const highestCubes = { red: 0, blue: 0, green: 0 };
 
     const picks = gameData.split('; ');
@@ -23,8 +23,8 @@ lines.forEach(line => {
         const colors = pick.split(', ');
 
         colors.forEach(color => {
-            let [amount, cubeColor] = color.split(' ');
-            amount = parseInt(amount);
+            const [amountString, cubeColor] = color.split(' ');
+            const amount = Number(amountString);
 
             if (amount > highestCubes[cubeColor]) {
                 highestCubes[cubeColor] = amount;
