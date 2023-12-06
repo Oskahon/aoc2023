@@ -1,4 +1,3 @@
-const { log } = require('console');
 const fs = require('fs');
 
 const file = 'data.txt';
@@ -29,12 +28,11 @@ function getLocations(data, seeds) {
     seeds.forEach(seed => {
         let destination = seed;
 
-        data.forEach((map, mapIndex) => {
+        data.forEach(map => {
             let found = false;
-            map.forEach((range, rangeIndex) => {
+            map.forEach(range => {
                 if (!found && destination >= range[1] && destination < (range[1] + range[2])) {
                     destination = range[0] + (destination - range[1]);
-                    // console.log(`map:${mapIndex + 1} range:${rangeIndex + 1} value:${destination}`);
                     found = true;
                 }
             });
@@ -72,5 +70,5 @@ function part2(data) {
 
 const data = parseData(lines);
 
-// part1(data);
+part1(data);
 part2(data);
