@@ -23,12 +23,16 @@ function countWinningOptions(races) {
     const optionsPerRace = [];
 
     for (const race of races) {
-        let countWins = 0;
-        for (let i = 0; i <= +race.time; i++) {
-            if ((i * (+race.time - i)) > +race.distance) {
-                countWins += 1;
-            }
+        let countLosses = 0;
+        let ms = 0;
+
+        while ((ms * (+race.time - ms)) <= +race.distance) {
+            countLosses += 1;
+            ms += 1;
         }
+
+        let countWins = +race.time - (countLosses * 2) + 1;
+
         optionsPerRace.push(countWins);
     }
 
